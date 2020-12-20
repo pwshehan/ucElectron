@@ -9,6 +9,7 @@
   "author": "Shehan Wijethunga",
   "license": "ISC",
   "dependencies": {
-    "electron": "^11.0.3"
+    "electron": "^11.0.3",
+    "fluent-ffmpeg": "^2.1.2"
   }
 }
