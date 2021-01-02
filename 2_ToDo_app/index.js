@@ -10,6 +10,7 @@ app.on("ready", () => {
     webPreferences: { nodeIntegration: true },
   });
   mainWindow.loadURL(`file://${__dirname}/main.html`);
+  mainWindow.on("closed", () => app.quit());
 
   const mainMenu = Menu.buildFromTemplate(munuTemplate);
   Menu.setApplicationMenu(mainMenu);
