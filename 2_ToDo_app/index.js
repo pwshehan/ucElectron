@@ -17,6 +17,27 @@ app.on("ready", () => {
 const munuTemplate = [
   {
     label: "File",
-    submenu: [{ label: "New Todo" }],
+    submenu: [
+      { label: "New Todo" },
+      {
+        label: "Quit",
+        // accelerator: (() => {
+        //   if (process.platform === "darwin") {
+        //     return "Command+Q";
+        //   } else {
+        //     return "Ctrl+Q";
+        //   }
+        // })(),
+        accelerator: process.platform === "darwin" ? "Command+Q" : "Ctrl+Q",
+        click() {
+          app.quit();
+        },
+      },
+    ],
   },
 ];
+
+if (process.platform == "darwin") {
+  //Add empty object if macOS
+  munuTemplate.unshift({});
+}
