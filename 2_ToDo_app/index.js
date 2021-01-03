@@ -27,9 +27,15 @@ function createAddWindow() {
   addWindow.on("closed", () => (addWindow = null));
 }
 
+function clearTodos() {
+  mainWindow.webContents.send("todo:clear");
+}
+
 ipcMain.on("todo:add", (event, todo) => {
   mainWindow.webContents.send("todo:add", todo);
-  addWindow.close();
+  if (addWindow) {
+    addWindow.close();
+  }
 });
 
 const munuTemplate = [
@@ -40,6 +46,12 @@ const munuTemplate = [
         label: "New Todo",
         click() {
           createAddWindow();
+        },
+      },
+      {
+        label: "Clear Todos",
+        click() {
+          clearTodos();
         },
       },
       {
@@ -69,6 +81,7 @@ if (process.env.NODE_ENV !== "production") {
   munuTemplate.push({
     label: "View",
     submenu: [
+      { role: "reload" },
       {
         label: "Toggle Developer Tools",
         accelerator:
