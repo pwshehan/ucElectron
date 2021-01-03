@@ -27,10 +27,6 @@ function createAddWindow() {
   addWindow.on("closed", () => (addWindow = null));
 }
 
-function clearTodos() {
-  mainWindow.webContents.send("todo:clear");
-}
-
 ipcMain.on("todo:add", (event, todo) => {
   mainWindow.webContents.send("todo:add", todo);
   if (addWindow) {
@@ -51,7 +47,7 @@ const munuTemplate = [
       {
         label: "Clear Todos",
         click() {
-          clearTodos();
+          mainWindow.webContents.send("todo:clear");
         },
       },
       {
