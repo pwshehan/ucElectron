@@ -5,7 +5,7 @@ const { BrowserWindow } = electron;
 class MainWindow extends BrowserWindow {
   constructor(url) {
     super({
-      webPreferences: { nodeIntegration: true },
+      webPreferences: { nodeIntegration: true, backgroundThrottling: false },
       height: 500,
       width: 300,
       frame: false,
