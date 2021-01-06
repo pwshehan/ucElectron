@@ -1,0 +1,32 @@
+const electron = require("electron");
+const ffmpeg = require("fluent-ffmpeg");
+const _ = require("lodash");
+
+const { app, BrowserWindow, ipcMain } = electron;
+let mainWindow;
+
+ffmpeg.setFfprobePath("C:\\src\\ffmpeg\\bin\\ffprobe.exe");
+
+app.on("ready", () => {
+  mainWindow = new BrowserWindow({
+    webPreferences: { nodeIntegration: true, backgroundThrottling: false },
+    height: 600,
+    width: 800,
+  });
+
+  mainWindow.loadURL(`file://${__dirname}/src/index.html`);
+});
+
+ipcMain.on("videos:added", (event, videos) => {
+  const promises = _.map(videos, (video) => {
+    return new Promise((resolve, reject) => {
+      ffmpeg.ffprobe(video.path, (err, metadeta) => {
+        resolve(metadeta);
+      });
+    });
+  });
+
+  Promise.all(promises).then((results) => {
+    console.log(results);
+  });
+});
