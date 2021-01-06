@@ -12,6 +12,9 @@ import { ipcRenderer } from "electron";
 // have been added and are pending conversion
 export const addVideos = (videos) => (dispatch) => {
   ipcRenderer.send("videos:added", videos);
+  ipcRenderer.on("metadata:complete", (event, videosWithData) => {
+    dispatch({ type: ADD_VIDEOS, payload: videosWithData });
+  });
 };
 
 // TODO: Communicate to MainWindow that the user wants
