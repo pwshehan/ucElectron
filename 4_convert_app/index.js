@@ -1,11 +1,13 @@
 const electron = require("electron");
 const ffmpeg = require("fluent-ffmpeg");
 const _ = require("lodash");
+const path = require("path");
 
 const { app, BrowserWindow, ipcMain } = electron;
 let mainWindow;
 
 ffmpeg.setFfprobePath("C:\\src\\ffmpeg\\bin\\ffprobe.exe");
+ffmpeg.setFfmpegPath("C:\\src\\ffmpeg\\bin\\ffmpeg.exe");
 
 app.on("ready", () => {
   mainWindow = new BrowserWindow({
@@ -30,5 +32,21 @@ ipcMain.on("videos:added", (event, videos) => {
 
   Promise.all(promises).then((results) => {
     mainWindow.webContents.send("metadata:complete", results);
+  });
+});
+
+ipcMain.on("conversion:start", (event, videos) => {
+  _.each(videos, (video) => {
+    const pathData = path.parse(video.path);
+    const outputPath = path.normalize(
+      `${pathData.dir}/${pathData.name}.${video.format}`
+    );
+
+    ffmpeg(video.path)
+      .output(outputPath)
+      .on("end", () => {
+        console.log("Video converted");
+      })
+      .run();
   });
 });
